@@ -1,90 +1,72 @@
 import React from 'react';
-import { CheckSquare } from 'lucide-react';
-import { useTodos } from './hooks/useTodos';
-import { TodoInput } from './components/TodoInput';
-import { TodoList } from './components/TodoList';
-import { TodoFilters } from './components/TodoFilters';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { TicketProvider } from './contexts/TicketContext';
+import { Layout } from './components/Layout/Layout';
+import { LoginForm } from './components/Auth/LoginForm';
+import { RegisterForm } from './components/Auth/RegisterForm';
+import { Dashboard } from './components/Dashboard/Dashboard';
+import { CreateTicket } from './components/Tickets/CreateTicket';
+import { TicketList } from './components/Tickets/TicketList';
+import { TicketDetail } from './components/Tickets/TicketDetail';
+import { AdminPanel } from './components/Admin/AdminPanel';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
-  const {
-    todos,
-    filter,
-    sortBy,
-    stats,
-    addTodo,
-    toggleTodo,
-    deleteTodo,
-    clearCompleted,
-    updateTodo,
-    setFilter,
-    setSortBy
-  } = useTodos();
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg">
-              <CheckSquare size={32} className="text-white" />
-            </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              TaskFlow
-            </h1>
-          </div>
-          <p className="text-gray-600 text-lg">
-            Stay organized and productive with your personal task manager
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Add Todo Input */}
-            <TodoInput onAdd={addTodo} />
-
-            {/* Todo List */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-              <TodoList
-                todos={todos}
-                onToggle={toggleTodo}
-                onDelete={deleteTodo}
-                onUpdate={updateTodo}
+    <AuthProvider>
+      <TicketProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
               />
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <TodoFilters
-              filter={filter}
-              sortBy={sortBy}
-              onFilterChange={setFilter}
-              onSortChange={setSortBy}
-              onClearCompleted={clearCompleted}
-              stats={stats}
-            />
-
-            {/* Tips */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">💡 Pro Tips</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>• Use different priorities to organize your tasks</li>
-                <li>• Press Enter to quickly add a new task</li>
-                <li>• Click the edit icon to modify existing tasks</li>
-                <li>• Your tasks are automatically saved locally</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center mt-12 text-gray-500">
-          <p>&copy; 2024 TaskFlow. Built with React & Tailwind CSS</p>
-        </div>
-      </div>
-    </div>
+              <Route
+                path="/create-ticket"
+                element={
+                  <ProtectedRoute>
+                    <CreateTicket />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets"
+                element={
+                  <ProtectedRoute>
+                    <TicketList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/tickets/:id"
+                element={
+                  <ProtectedRoute>
+                    <TicketDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <AdminPanel />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </TicketProvider>
+    </AuthProvider>
   );
 }
 
