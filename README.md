@@ -156,9 +156,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Your Name - [@yourusername](https://twitter.com/yourusername) - your.email@example.com
+Your Name - S Rama Shesha Sai
 
-Project Link: [https://github.com/yourusername/taskflow](https://github.com/yourusername/taskflow)
+
 
 ---
 
