@@ -9,6 +9,7 @@ export const AdminPanel: React.FC = () => {
   const [timeRange, setTimeRange] = useState('7d');
 
   if (user?.role !== 'admin') {
+    
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
